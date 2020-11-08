@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 
 app.listen(port, async () => {
   await sequelize
-    .sync({ force: true })
+    .authenticate()
     .then(() => {
       console.log(`Server listening on port: ${port}`);
     })
