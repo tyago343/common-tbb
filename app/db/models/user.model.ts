@@ -6,16 +6,29 @@ import {
   PrimaryKey,
   Table,
   Model,
+  BelongsToMany,
+  Scopes,
 } from "sequelize-typescript";
-
+import Role from "./role.model";
+import { UserRole } from "./UserRole";
 export interface IUser {
   id?: number | null;
   username: string;
   email: string;
   password: string;
-  permissions: string;
+  role: Role[];
 }
 
+@Scopes(() => ({
+  role: {
+    include: [
+      {
+        model: Role,
+        through: { attributes: [] },
+      },
+    ],
+  },
+}))
 @Table({
   tableName: "user",
   timestamps: true,
@@ -38,7 +51,6 @@ export default class User extends Model implements IUser {
   @Column
   password!: string;
   @AllowNull(false)
-  @NotEmpty
-  @Column
-  permissions!: string;
+  @BelongsToMany(() => Role, () => UserRole)
+  role!: Role[];
 }
