@@ -6,34 +6,22 @@ import {
   PrimaryKey,
   Table,
   Model,
-  BelongsToMany,
-  Scopes,
+  HasMany,
 } from "sequelize-typescript";
-import Role from "./role.model";
 import { UserRole } from "./UserRole";
 export interface IUser {
   id?: number | null;
   username: string;
   email: string;
   password: string;
-  role: Role[];
+  roles: UserRole[];
 }
 
-@Scopes(() => ({
-  role: {
-    include: [
-      {
-        model: Role,
-        through: { attributes: [] },
-      },
-    ],
-  },
-}))
 @Table({
   tableName: "user",
   timestamps: true,
 })
-export default class User extends Model implements IUser {
+export default class User extends Model<User> implements IUser {
   @AutoIncrement
   @PrimaryKey
   @Column
@@ -50,7 +38,7 @@ export default class User extends Model implements IUser {
   @NotEmpty
   @Column
   password!: string;
-  @AllowNull(false)
-  @BelongsToMany(() => Role, () => UserRole)
-  role!: Role[];
+
+  @HasMany(() => UserRole)
+  roles!: UserRole[];
 }

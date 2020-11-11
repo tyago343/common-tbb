@@ -6,19 +6,22 @@ import {
   PrimaryKey,
   Table,
   Model,
+  HasMany,
 } from "sequelize-typescript";
+import { UserRole } from "./UserRole";
 
 export interface IRole {
   id?: number | null;
   projects: boolean;
   admin: boolean;
+  users: UserRole[];
 }
 
 @Table({
   tableName: "role",
   timestamps: true,
 })
-export default class Role extends Model implements IRole {
+export default class Role extends Model<Role> implements IRole {
   @AutoIncrement
   @PrimaryKey
   @Column
@@ -31,4 +34,7 @@ export default class Role extends Model implements IRole {
   @NotEmpty
   @Column
   admin!: boolean;
+
+  @HasMany(() => UserRole)
+  users!: UserRole[];
 }

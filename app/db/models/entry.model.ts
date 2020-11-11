@@ -5,13 +5,15 @@ import {
   NotEmpty,
   PrimaryKey,
   Table,
+  BelongsTo,
   Model,
-  Scopes,
+  ForeignKey,
 } from "sequelize-typescript";
 import Client from "./client.model";
 export interface IEntry {
   id?: number | null;
-  client?: Client;
+  clientId: number;
+  client: Client;
   application?: string;
   url?: string;
   login: string;
@@ -19,28 +21,21 @@ export interface IEntry {
   notes?: string;
 }
 
-@Scopes(() => ({
-  client: {
-    include: [
-      {
-        model: Client,
-        through: { attributes: [] },
-      },
-    ],
-  },
-}))
 @Table({
   tableName: "entry",
   timestamps: true,
 })
-export default class Entry extends Model implements IEntry {
+export default class Entry extends Model<Entry> implements IEntry {
   @AutoIncrement
   @PrimaryKey
   @Column
   id?: number;
   @AllowNull(true)
+  @ForeignKey(() => Client)
   @Column
-  client?: Client;
+  clientId!: number;
+  @BelongsTo(() => Client)
+  client!: Client;
   @AllowNull(true)
   @Column
   application?: string;

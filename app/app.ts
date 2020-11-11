@@ -1,8 +1,13 @@
 import express from "express";
 import { sequelize } from "./db";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
+
+// initialize configuration
+dotenv.config();
+const port = process.env.SERVER_PORT;
+
 const app: express.Application = express();
-const port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
