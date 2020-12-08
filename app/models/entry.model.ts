@@ -1,7 +1,7 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../app";
+import { sequelize } from "../config/database";
 
-interface EntryAttributes {
+export interface EntryAttributes {
   id: number;
   application: string;
   url: string;
@@ -9,13 +9,15 @@ interface EntryAttributes {
   password: string;
   notes: string;
 }
-class Entry extends Model<EntryAttributes> implements EntryAttributes {
+export class Entry extends Model<EntryAttributes> implements EntryAttributes {
   public id!: number;
   public application!: string;
   public url!: string;
   public login!: string;
   public password!: string;
   public notes!: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 Entry.init(
   {
@@ -45,9 +47,8 @@ Entry.init(
       allowNull: true,
     },
   },
-  {
-    tableName: "entries",
-    sequelize,
-  }
+  { sequelize }
 );
-export default Entry;
+Entry.sync({ force: true }).then(() =>
+  console.log("Entry table created :D --------/")
+);

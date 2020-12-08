@@ -1,13 +1,17 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../app";
+import { sequelize } from "../config/database";
 
-interface ClientAttributes {
+export interface ClientAttributes {
   id: number;
   name: string;
 }
-class Client extends Model<ClientAttributes> implements ClientAttributes {
+export class Client
+  extends Model<ClientAttributes>
+  implements ClientAttributes {
   public id!: number;
   public name!: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 Client.init(
   {
@@ -21,10 +25,9 @@ Client.init(
       allowNull: false,
     },
   },
-  {
-    tableName: "clients",
-    sequelize,
-  }
+  { sequelize }
 );
 
-export default Client;
+Client.sync({ force: true }).then(() =>
+  console.log("link table created :D -----/")
+);

@@ -1,12 +1,12 @@
 import errorHandler from "errorhandler";
 
-import app, { sequelize } from "./app";
+import app from "./app";
+import { sequelize } from "./config/database";
 
 /**
  * Error Handler. Provides full stack - remove for production
  */
 import dotenv from "dotenv";
-import User from "./models/user.model";
 
 // initialize configuration
 dotenv.config();
@@ -18,13 +18,6 @@ app.use(errorHandler());
 const server = app.listen(process.env.SERVER_PORT, async () => {
   try {
     await sequelize.sync({ force: true });
-    const newUser = await User.create({
-      username: "santiago",
-      email: "santiago@tbb.agency",
-      password: "123456",
-      admin: true,
-    });
-    console.log(newUser);
     console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
