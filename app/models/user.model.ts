@@ -1,44 +1,61 @@
 import {
-  AllowNull,
-  AutoIncrement,
-  Column,
-  NotEmpty,
-  PrimaryKey,
-  Table,
   Model,
-  HasMany,
-} from "sequelize-typescript";
-import { UserRole } from "./UserRole";
-export interface IUser {
-  id?: number | null;
+  DataTypes,
+  HasManyGetAssociationsMixin,
+  Association,
+} from "sequelize";
+import { sequelize } from "../app";
+import Entry from "./entry.model";
+import Client from "./client.model";
+interface UserAttributes {
+  id?: number;
   username: string;
   email: string;
   password: string;
-  roles: UserRole[];
+  admin: boolean;
 }
-
-@Table({
-  tableName: "user",
-  timestamps: true,
-})
-export default class User extends Model<User> implements IUser {
-  @AutoIncrement
-  @PrimaryKey
-  @Column
-  id?: number;
-  @AllowNull(false)
-  @NotEmpty
-  @Column
-  username!: string;
-  @AllowNull(false)
-  @NotEmpty
-  @Column
-  email!: string;
-  @AllowNull(false)
-  @NotEmpty
-  @Column
-  password!: string;
-
-  @HasMany(() => UserRole)
-  roles!: UserRole[];
+class User extends Model<UserAttributes> implements UserAttributes {
+  public id?: number;
+  public username!: string;
+  public email!: string;
+  public password!: string;
+  public admin!: boolean;
 }
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    username: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    admin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+  },
+  {
+    tableName: "users",
+    sequelize,
+  }
+);
+User.belongsToMany(Entry, { through: "user_projects" });
+Entry.belongsToMany(User, { through: "user_projects" });
+Client.hasMany(Entry, {
+  sourceKey: "id",
+  foreignKey: "ownerId",
+  as: "entries",
+});
+export default User;

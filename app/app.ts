@@ -1,5 +1,5 @@
 import express from "express";
-import { Sequelize } from "sequelize-typescript";
+import { Sequelize } from "sequelize";
 import compression from "compression";
 import session from "express-session";
 import passport from "passport";
@@ -9,14 +9,14 @@ import dotenv from "dotenv";
 // initialize configuration
 dotenv.config();
 const app: express.Application = express();
-export const sequelize = new Sequelize({
-  database: process.env.DATABASE_NAME,
-  dialect: "postgres",
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  storage: ":memory:",
-  models: [__dirname + "/models"],
-});
+export const sequelize = new Sequelize(
+  process.env.DATABASE_NAME || "",
+  process.env.DATABASE_USER || "",
+  process.env.DATABASE_PASSWORD,
+  {
+    dialect: "postgres",
+  }
+);
 
 // Express configuration
 app.use(compression());

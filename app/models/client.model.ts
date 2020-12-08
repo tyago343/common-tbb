@@ -1,33 +1,36 @@
 import {
-  AllowNull,
-  AutoIncrement,
-  Column,
-  NotEmpty,
-  PrimaryKey,
-  Table,
   Model,
-  HasMany,
-} from "sequelize-typescript";
+  DataTypes,
+  HasManyGetAssociationsMixin,
+  Association,
+} from "sequelize";
+import { sequelize } from "../app";
 import Entry from "./entry.model";
-export interface IClient {
-  id?: number | null;
-  name: string;
-  project?: Entry[];
-}
 
-@Table({
-  tableName: "client",
-  timestamps: true,
-})
-export default class Client extends Model<Client> implements IClient {
-  @AutoIncrement
-  @PrimaryKey
-  @Column
-  id?: number;
-  @AllowNull(false)
-  @NotEmpty
-  @Column
-  name!: string;
-  @HasMany(() => Entry)
-  entries?: Entry[];
+interface ClientAttributes {
+  id: number;
+  name: string;
 }
+class Client extends Model<ClientAttributes> implements ClientAttributes {
+  public id!: number;
+  public name!: string;
+}
+Client.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+  },
+  {
+    tableName: "clients",
+    sequelize,
+  }
+);
+
+export default Client;

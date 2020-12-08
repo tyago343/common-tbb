@@ -1,56 +1,57 @@
-import {
-  AllowNull,
-  AutoIncrement,
-  Column,
-  NotEmpty,
-  PrimaryKey,
-  Table,
-  BelongsTo,
-  Model,
-  ForeignKey,
-} from "sequelize-typescript";
-import Client from "./client.model";
-export interface IEntry {
-  id?: number | null;
-  clientId: number;
-  client: Client;
-  application?: string;
-  url?: string;
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../app";
+
+interface EntryAttributes {
+  id: number;
+  application: string;
+  url: string;
   login: string;
   password: string;
-  notes?: string;
+  notes: string;
 }
-
-@Table({
-  tableName: "entry",
-  timestamps: true,
-})
-export default class Entry extends Model<Entry> implements IEntry {
-  @AutoIncrement
-  @PrimaryKey
-  @Column
-  id?: number;
-  @AllowNull(true)
-  @ForeignKey(() => Client)
-  @Column
-  clientId!: number;
-  @BelongsTo(() => Client)
-  client!: Client;
-  @AllowNull(true)
-  @Column
-  application?: string;
-  @AllowNull(true)
-  @Column
-  url?: string;
-  @AllowNull(false)
-  @NotEmpty
-  @Column
-  login!: string;
-  @AllowNull(false)
-  @NotEmpty
-  @Column
-  password!: string;
-  @AllowNull(true)
-  @Column
-  notes?: string;
+class Entry extends Model<EntryAttributes> implements EntryAttributes {
+  public id!: number;
+  public application!: string;
+  public url!: string;
+  public login!: string;
+  public password!: string;
+  public notes!: string;
 }
+Entry.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    ownerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    application: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    login: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    notes: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+  },
+  {
+    tableName: "entries",
+    sequelize,
+  }
+);
+export default Entry;
