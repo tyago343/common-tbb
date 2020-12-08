@@ -1,11 +1,5 @@
-import {
-  Model,
-  DataTypes,
-  HasManyGetAssociationsMixin,
-  Association,
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../app";
-import Entry from "./entry.model";
 
 interface ClientAttributes {
   id: number;

@@ -24,10 +24,6 @@ Entry.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    ownerId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     application: {
       type: DataTypes.STRING,
       allowNull: false,

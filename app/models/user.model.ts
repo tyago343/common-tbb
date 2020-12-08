@@ -1,9 +1,4 @@
-import {
-  Model,
-  DataTypes,
-  HasManyGetAssociationsMixin,
-  Association,
-} from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../app";
 import Entry from "./entry.model";
 import Client from "./client.model";
@@ -53,9 +48,6 @@ User.init(
 );
 User.belongsToMany(Entry, { through: "user_projects" });
 Entry.belongsToMany(User, { through: "user_projects" });
-Client.hasMany(Entry, {
-  sourceKey: "id",
-  foreignKey: "ownerId",
-  as: "entries",
-});
+Client.hasMany(Entry);
+
 export default User;
