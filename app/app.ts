@@ -11,11 +11,14 @@ dotenv.config();
 // Express configuration
 class App {
   public app: express.Application;
-  public routeProvider: Router = new Router();
+  public router: express.Router;
+  public routeProvider;
   constructor() {
     this.app = express();
+    this.router = express.Router();
     this.config();
-    this.routeProvider.routes(this.app);
+    this.routeProvider = new Router(this.app, this.router);
+    this.routeProvider.routes();
   }
   private config(): void {
     this.app.use(compression());
