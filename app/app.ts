@@ -4,17 +4,18 @@ import session from "express-session";
 import passport from "passport";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import { Routes } from "./routes/user.routes";
+import { Router } from "./routes/Router";
 // initialize configuration
 dotenv.config();
 
 // Express configuration
 class App {
   public app: express.Application;
-  public routeProvider: Routes = new Routes();
+  public routeProvider: Router = new Router();
   constructor() {
     this.app = express();
     this.config();
+    this.routeProvider.routes(this.app);
   }
   private config(): void {
     this.app.use(compression());

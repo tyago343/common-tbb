@@ -3,7 +3,7 @@ import { DestroyOptions, UpdateOptions } from "sequelize/types";
 import { User } from "../models/user.model";
 
 export class UserController {
-  public async index(res: Response): Promise<void> {
+  public async index(req: Request, res: Response): Promise<void> {
     try {
       const users: Array<User> = await User.findAll();
       if (!users) {
@@ -13,6 +13,19 @@ export class UserController {
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "No pudo ejecutarse la consulta." });
+    }
+  }
+  public async getOne(req: Request, res: Response): Promise<void> {
+    const id: string = req.body.id;
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        res.status(400).json({ error: "Usuario no encontrado" });
+      }
+      res.status(200).json({ user });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: "La consulta no pudo realizarse" });
     }
   }
   public async save(req: Request, res: Response): Promise<void> {
@@ -36,15 +49,15 @@ export class UserController {
         where: { id: nodeId },
         limit: 1,
       };
-      const result = await User.destroy(options);
-      if (!result) {
+      const user = await User.destroy(options);
+      if (!user) {
         res.status(400).json({ error: "No se pudo eliminar" });
       }
-      res.status(200).json({ data: result });
+      res.status(200).json({ user });
     } catch (err) {
       console.log(err);
       res
-        .status(400)
+        .status(500)
         .json({ error: "La consulta no pudo realizarse, intenta mas tarde" });
     }
   }
@@ -66,7 +79,7 @@ export class UserController {
     } catch (err) {
       console.log(err);
       res
-        .status(400)
+        .status(500)
         .json({ error: "La consulta no pudo realizarse, intenta mas tarde" });
     }
   }
