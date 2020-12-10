@@ -49,6 +49,4 @@ Entry.init(
   },
   { sequelize }
 );
-Entry.sync({ force: true }).then(() =>
-  console.log("Entry table created :D --------/")
-);
+Entry.sync().then(() => console.log("Entry table created :D --------/"));

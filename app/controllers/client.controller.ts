@@ -1,29 +1,28 @@
 import { Request, Response } from "express";
 import { DestroyOptions, UpdateOptions } from "sequelize/types";
 import { Client } from "../models/client.model";
-import { Entry } from "../models/entry.model";
 
-export class EntryController {
+export class ClientController {
   public async index(req: Request, res: Response): Promise<void> {
     try {
-      const entries: Array<Entry> = await Entry.findAll({ include: [Client] });
-      if (!entries) {
+      const clients: Array<Client> = await Client.findAll();
+      if (!clients) {
         res.status(400).json({ error: "No hay usuarios." });
       }
-      res.status(200).json(entries);
+      res.status(200).json(clients);
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "No pudo ejecutarse la consulta." });
     }
   }
   public async getOne(req: Request, res: Response): Promise<void> {
-    const entryId: string = req.body.id;
+    const clientId: string = req.body.id;
     try {
-      const entry = await Entry.findByPk(entryId);
-      if (!entry) {
+      const client = await Client.findByPk(clientId);
+      if (!client) {
         res.status(400).json({ error: "Usuario no encontrado" });
       }
-      res.status(200).json({ entry });
+      res.status(200).json({ client });
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "La consulta no pudo realizarse" });
@@ -31,11 +30,11 @@ export class EntryController {
   }
   public async save(req: Request, res: Response): Promise<void> {
     try {
-      const entry: Entry = await Entry.create({ ...req.body });
-      if (!entry) {
+      const client: Client = await Client.create({ ...req.body });
+      if (!client) {
         res.status(400).json({ error: "No pudo ser creado" });
       }
-      res.status(201).json({ entry });
+      res.status(201).json({ client });
     } catch (err) {
       console.log(err);
       res
@@ -45,16 +44,16 @@ export class EntryController {
   }
   public async delete(req: Request, res: Response): Promise<void> {
     try {
-      const entryId: string = req.params.id;
+      const clientId: string = req.params.id;
       const options: DestroyOptions = {
-        where: { id: entryId },
+        where: { id: clientId },
         limit: 1,
       };
-      const entry = await Entry.destroy(options);
-      if (!entry) {
+      const client = await Client.destroy(options);
+      if (!client) {
         res.status(400).json({ error: "No se pudo eliminar" });
       }
-      res.status(200).json({ entry });
+      res.status(200).json({ client });
     } catch (err) {
       console.log(err);
       res
@@ -64,13 +63,13 @@ export class EntryController {
   }
   public async update(req: Request, res: Response): Promise<void> {
     try {
-      const entryId: string = req.params.id;
+      const clientId: string = req.params.id;
       const params = req.body;
       const update: UpdateOptions = {
-        where: { id: entryId },
+        where: { id: clientId },
         limit: 1,
       };
-      const result = await Entry.update(params, update);
+      const result = await Client.update(params, update);
       if (!result) {
         res
           .status(400)

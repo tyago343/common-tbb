@@ -50,7 +50,5 @@ User.init(
 User.belongsToMany(Entry, { through: "user_projects" });
 Entry.belongsToMany(User, { through: "user_projects" });
 Client.hasMany(Entry);
-
-User.sync({ force: true }).then(() =>
-  console.log("User table created :D -------/")
-);
+Entry.belongsTo(Client);
+User.sync().then(() => console.log("User table created :D -------/"));

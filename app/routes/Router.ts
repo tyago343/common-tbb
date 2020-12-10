@@ -1,10 +1,12 @@
 import express from "express";
 import { UserController } from "../controllers/user.controller";
 import { EntryController } from "../controllers/entry.controller";
+import { ClientController } from "../controllers/client.controller";
 
 export class Router {
   public userController: UserController = new UserController();
   public entryController: EntryController = new EntryController();
+  public clientController: ClientController = new ClientController();
   public app: express.Application;
   public router: express.Router;
   constructor(app: express.Application, router: express.Router) {

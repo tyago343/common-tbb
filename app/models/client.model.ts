@@ -28,6 +28,4 @@ Client.init(
   { sequelize }
 );
 
-Client.sync({ force: true }).then(() =>
-  console.log("link table created :D -----/")
-);
+Client.sync().then(() => console.log("link table created :D -----/"));
