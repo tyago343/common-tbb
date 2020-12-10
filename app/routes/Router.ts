@@ -33,5 +33,14 @@ export class Router {
       .get(this.entryController.getOne)
       .put(this.entryController.update)
       .delete(this.entryController.delete);
+    this.app
+      .route("/clients")
+      .get(this.clientController.index)
+      .post(this.clientController.save);
+    this.app
+      .route("/clients/:id")
+      .get(this.clientController.getOne)
+      .put(this.clientController.update)
+      .delete(this.clientController.delete);
   }
 }
