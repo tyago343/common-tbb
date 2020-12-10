@@ -1,28 +1,28 @@
 import { Request, Response } from "express";
 import { DestroyOptions, UpdateOptions } from "sequelize/types";
-import { User } from "../models/user.model";
+import { Entry } from "../models/entry.model";
 
-export class UserController {
+export class EntryController {
   public async index(req: Request, res: Response): Promise<void> {
     try {
-      const users: Array<User> = await User.findAll();
-      if (!users) {
+      const entries: Array<Entry> = await Entry.findAll();
+      if (!entries) {
         res.status(400).json({ error: "No hay usuarios." });
       }
-      res.status(200).json(users);
+      res.status(200).json(entries);
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "No pudo ejecutarse la consulta." });
     }
   }
   public async getOne(req: Request, res: Response): Promise<void> {
-    const userId: string = req.body.id;
+    const entryId: string = req.body.id;
     try {
-      const user = await User.findByPk(userId);
-      if (!user) {
+      const entry = await Entry.findByPk(entryId);
+      if (!entry) {
         res.status(400).json({ error: "Usuario no encontrado" });
       }
-      res.status(200).json({ user });
+      res.status(200).json({ entry });
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "La consulta no pudo realizarse" });
@@ -30,11 +30,11 @@ export class UserController {
   }
   public async save(req: Request, res: Response): Promise<void> {
     try {
-      const user: User = await User.create({ ...req.body });
-      if (!user) {
+      const entry: Entry = await Entry.create({ ...req.body });
+      if (!entry) {
         res.status(400).json({ error: "No pudo ser creado" });
       }
-      res.status(201).json({ user });
+      res.status(201).json({ entry });
     } catch (err) {
       console.log(err);
       res
@@ -44,16 +44,16 @@ export class UserController {
   }
   public async delete(req: Request, res: Response): Promise<void> {
     try {
-      const userId: string = req.params.id;
+      const entryId: string = req.params.id;
       const options: DestroyOptions = {
-        where: { id: userId },
+        where: { id: entryId },
         limit: 1,
       };
-      const user = await User.destroy(options);
-      if (!user) {
+      const entry = await Entry.destroy(options);
+      if (!entry) {
         res.status(400).json({ error: "No se pudo eliminar" });
       }
-      res.status(200).json({ user });
+      res.status(200).json({ entry });
     } catch (err) {
       console.log(err);
       res
@@ -63,13 +63,13 @@ export class UserController {
   }
   public async update(req: Request, res: Response): Promise<void> {
     try {
-      const userId: string = req.params.id;
+      const entryId: string = req.params.id;
       const params = req.body;
       const update: UpdateOptions = {
-        where: { id: userId },
+        where: { id: entryId },
         limit: 1,
       };
-      const result = await User.update(params, update);
+      const result = await Entry.update(params, update);
       if (!result) {
         res
           .status(400)

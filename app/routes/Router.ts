@@ -1,10 +1,12 @@
 import express from "express";
 import { UserController } from "../controllers/user.controller";
+import { EntryController } from "../controllers/entry.controller";
 
 export class Router {
   public userController: UserController = new UserController();
-  public app;
-  public router;
+  public entryController: EntryController = new EntryController();
+  public app: express.Application;
+  public router: express.Router;
   constructor(app: express.Application, router: express.Router) {
     this.app = app;
     this.router = router;
@@ -20,5 +22,14 @@ export class Router {
       .get(this.userController.getOne)
       .put(this.userController.update)
       .delete(this.userController.delete);
+    this.app
+      .route("/entries")
+      .get(this.entryController.index)
+      .post(this.entryController.save);
+    this.app
+      .route("/entries/:id")
+      .get(this.entryController.getOne)
+      .put(this.entryController.update)
+      .delete(this.entryController.delete);
   }
 }
