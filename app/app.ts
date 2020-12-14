@@ -81,8 +81,11 @@ class App {
         });
       })
     );
+    this.app.use(express.static(path.resolve("frontend/build/static/")));
+    this.app.use(express.static(path.resolve("frontend/build/")));
+
     this.app.get("*", (req: express.Request, res: express.Response) => {
-      res.sendFile(path.resolve("public/index.html"));
+      res.sendFile(path.resolve("frontend/build/index.html"));
     });
   }
 }
