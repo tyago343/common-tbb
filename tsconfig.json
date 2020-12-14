@@ -19,19 +19,16 @@
     "noImplicitAny": false,
     "lib": ["es6", "es2017", "es2018", "es2019", "ES2020"],
     "incremental": false,
-
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
     "strictPropertyInitialization": false, // ACORDARSE DE PONERLO EN TRUE
     "noImplicitThis": true,
     "alwaysStrict": true,
-
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-
     "forceConsistentCasingInFileNames": true
   },
   "include": ["app", "app/*/.spec.ts"]

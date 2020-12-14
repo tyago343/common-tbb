@@ -18,7 +18,7 @@ app.use(errorHandler());
 const server = app.listen(process.env.SERVER_PORT, async () => {
   try {
     await sequelize.sync();
-    console.log("Connection has been established successfully.");
+    console.log("Database connected.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }

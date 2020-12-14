@@ -2,6 +2,7 @@ import express from "express";
 import { UserController } from "../controllers/user.controller";
 import { EntryController } from "../controllers/entry.controller";
 import { ClientController } from "../controllers/client.controller";
+import passport from "passport";
 
 export class Router {
   public userController: UserController = new UserController();
@@ -17,30 +18,30 @@ export class Router {
   public routes(): void {
     this.app
       .route("/users")
-      .get(this.userController.index)
-      .post(this.userController.save);
+      .get(passport.authenticate("local"), this.userController.index)
+      .post(passport.authenticate("local"), this.userController.save);
     this.app
       .route("/users/:id")
-      .get(this.userController.getOne)
-      .put(this.userController.update)
-      .delete(this.userController.delete);
+      .get(passport.authenticate("local"), this.userController.getOne)
+      .put(passport.authenticate("local"), this.userController.update)
+      .delete(passport.authenticate("local"), this.userController.delete);
     this.app
       .route("/entries")
-      .get(this.entryController.index)
-      .post(this.entryController.save);
+      .get(passport.authenticate("local"), this.entryController.index)
+      .post(passport.authenticate("local"), this.entryController.save);
     this.app
       .route("/entries/:id")
-      .get(this.entryController.getOne)
-      .put(this.entryController.update)
-      .delete(this.entryController.delete);
+      .get(passport.authenticate("local"), this.entryController.getOne)
+      .put(passport.authenticate("local"), this.entryController.update)
+      .delete(passport.authenticate("local"), this.entryController.delete);
     this.app
       .route("/clients")
-      .get(this.clientController.index)
-      .post(this.clientController.save);
+      .get(passport.authenticate("local"), this.clientController.index)
+      .post(passport.authenticate("local"), this.clientController.save);
     this.app
       .route("/clients/:id")
-      .get(this.clientController.getOne)
-      .put(this.clientController.update)
-      .delete(this.clientController.delete);
+      .get(passport.authenticate("local"), this.clientController.getOne)
+      .put(passport.authenticate("local"), this.clientController.update)
+      .delete(passport.authenticate("local"), this.clientController.delete);
   }
 }
