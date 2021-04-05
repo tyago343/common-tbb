@@ -6,14 +6,7 @@ import Login from "./pages/Login";
 import { fetchEntries } from "./utils";
 
 const App = () => {
-  const [entries, setEntries] = useState([]);
-  useEffect(() => {
-    const getEntries = async () => {
-      const entries = await fetchEntries();
-      if (entries) setEntries(entries);
-    };
-    getEntries();
-  }, []);
+  
   return (
     <Fragment>
       <Header />
@@ -23,7 +16,7 @@ const App = () => {
           <Login />
         </Route>
         <Route path="/" exact>
-          <Home entries={entries} />
+          <Home />
         </Route>
       </Switch>
     </Fragment>

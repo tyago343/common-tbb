@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { UserController } from "../controllers/user.controller";
 import { EntryController } from "../controllers/entry.controller";
 import { ClientController } from "../controllers/client.controller";
@@ -14,53 +14,48 @@ export class Router {
     this.app = app;
     this.router = router;
   }
-
+  public authenticated(req: Request, res: Response, next: NextFunction): void {
+    if (!req.isAuthenticated()) return res.redirect("/login");
+    next();
+  }
   public routes(): void {
     this.app
       .route("/authenticate")
-      .post( function (req, res, next) {
-        passport.authenticate("local", function (err, user, info) {
-          console.log(err, user, info)
-          if (err) {
-            return next(err);
-          }
-          if (!user) {
-            return res.send("/login");
-          }
-          req.logIn(user, function (err) {
-            if (err) {
-              return next(err);
-            }
-            return res.redirect("/users/" + user.username);
+      .post(passport.authenticate("local"), (req, res) => {
+        const authenticated = req.isAuthenticated();
+        if (authenticated) {
+          return res.send({
+            user: req.user,
           });
-        })(req, res, next);
+        }
+        return res.redirect("/login");
       });
     this.app
       .route("/users")
-      .get(passport.authenticate("local"), this.userController.index)
-      .post(passport.authenticate("local"), this.userController.save);
+      .get(this.authenticated, this.userController.index)
+      .post(this.authenticated, this.userController.save);
     this.app
       .route("/users/:id")
-      .get(passport.authenticate("local"), this.userController.getOne)
-      .put(passport.authenticate("local"), this.userController.update)
-      .delete(passport.authenticate("local"), this.userController.delete);
+      .get(this.authenticated, this.userController.getOne)
+      .put(this.authenticated, this.userController.update)
+      .delete(this.authenticated, this.userController.delete);
     this.app
       .route("/entries")
-      .get(passport.authenticate("local"), this.entryController.index)
-      .post(passport.authenticate("local"), this.entryController.save);
+      .get(this.authenticated, this.entryController.index)
+      .post(this.authenticated, this.entryController.save);
     this.app
       .route("/entries/:id")
-      .get(passport.authenticate("local"), this.entryController.getOne)
-      .put(passport.authenticate("local"), this.entryController.update)
-      .delete(passport.authenticate("local"), this.entryController.delete);
+      .get(this.authenticated, this.entryController.getOne)
+      .put(this.authenticated, this.entryController.update)
+      .delete(this.authenticated, this.entryController.delete);
     this.app
       .route("/clients")
-      .get(passport.authenticate("local"), this.clientController.index)
-      .post(passport.authenticate("local"), this.clientController.save);
+      .get(this.authenticated, this.clientController.index)
+      .post(this.authenticated, this.clientController.save);
     this.app
       .route("/clients/:id")
-      .get(passport.authenticate("local"), this.clientController.getOne)
-      .put(passport.authenticate("local"), this.clientController.update)
-      .delete(passport.authenticate("local"), this.clientController.delete);
+      .get(this.authenticated, this.clientController.getOne)
+      .put(this.authenticated, this.clientController.update)
+      .delete(this.authenticated, this.clientController.delete);
   }
 }

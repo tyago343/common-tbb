@@ -2,10 +2,10 @@ import express from "express";
 import compression from "compression";
 import session from "express-session";
 import passport from "passport";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { Router } from "./routes/Router";
 import path from "path";
+import cookieParser from "cookie-parser";
 import { Strategy as LocalStrategy } from "passport-local";
 import bCrypt from "bcrypt";
 import { User } from "./models/user.model";
@@ -28,16 +28,14 @@ class App {
   }
   private config(): void {
     this.app.use(compression());
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(
       session({
-        secret: "perro",
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: true },
+        secret: "cat",
       })
     );
+    this.app.use(cookieParser());
     this.app.use(passport.initialize());
     this.app.use(passport.session());
   }
@@ -45,7 +43,6 @@ class App {
     passport.use(
       "local",
       new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-       
         User.findOne({
           where: {
             email: email,
@@ -57,7 +54,7 @@ class App {
                 message: "Email does not exist",
               });
             }
-         
+
             return done(null, user);
           })
           .catch(function (err: any) {
@@ -67,11 +64,14 @@ class App {
             });
           });
         passport.serializeUser<any, any>((user, done) => {
+          console.log("serialize");
           done(undefined, user.id);
         });
 
-        passport.deserializeUser((id, done) => {
-          User;
+        passport.deserializeUser((user, done) => {
+          console.log("DESserialize");
+
+          done(null, user);
         });
       })
     );

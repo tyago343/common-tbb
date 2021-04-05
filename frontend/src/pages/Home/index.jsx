@@ -1,7 +1,16 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { fetchEntries } from "../../utils";
+
 import { HomeWrapper } from "./styles";
-const Home = ({entries}) => {
-  
+const Home = () => {
+  const [entries, setEntries] = useState([]);
+  useEffect(() => {
+    const getEntries = async () => {
+      const entries = await fetchEntries();
+      if (entries) setEntries(entries);
+    };
+    getEntries();
+  }, []);
   return (
     <HomeWrapper>
       <section>
