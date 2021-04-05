@@ -45,9 +45,7 @@ class App {
     passport.use(
       "local",
       new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-        const isValidPassword = function (userpass: string, password: string) {
-          return bCrypt.compareSync(password, userpass);
-        };
+       
         User.findOne({
           where: {
             email: email,
@@ -59,11 +57,7 @@ class App {
                 message: "Email does not exist",
               });
             }
-            if (!isValidPassword(user.password, password)) {
-              return done(null, false, {
-                message: "Incorrect password.",
-              });
-            }
+         
             return done(null, user);
           })
           .catch(function (err: any) {

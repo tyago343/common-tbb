@@ -17,6 +17,25 @@ export class Router {
 
   public routes(): void {
     this.app
+      .route("/authenticate")
+      .post( function (req, res, next) {
+        passport.authenticate("local", function (err, user, info) {
+          console.log(err, user, info)
+          if (err) {
+            return next(err);
+          }
+          if (!user) {
+            return res.send("/login");
+          }
+          req.logIn(user, function (err) {
+            if (err) {
+              return next(err);
+            }
+            return res.redirect("/users/" + user.username);
+          });
+        })(req, res, next);
+      });
+    this.app
       .route("/users")
       .get(passport.authenticate("local"), this.userController.index)
       .post(passport.authenticate("local"), this.userController.save);

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import { InputWrapper } from "./styles";
 
 const Input = ({ handleChange, label, value, type, name }) => {
@@ -8,7 +8,7 @@ const Input = ({ handleChange, label, value, type, name }) => {
       <label htmlFor={name}>{label}</label>
       <input
         type={type}
-        name={name}
+        id={name}
         defaultValue={value}
         onChange={handleChange}
       />
@@ -16,10 +16,10 @@ const Input = ({ handleChange, label, value, type, name }) => {
   );
 };
 Input.propTypes = {
-    handleChange: PropTypes.func,
-    label: PropTypes.string,
-    value: PropTypes.string,
-    type: PropTypes.string,
-    name: PropTypes.string,
-}
+  handleChange: PropTypes.func,
+  label: PropTypes.string,
+  value: PropTypes.string,
+  type: PropTypes.string,
+  name: PropTypes.string,
+};
 export default Input;
