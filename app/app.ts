@@ -64,12 +64,10 @@ class App {
             });
           });
         passport.serializeUser<any, any>((user, done) => {
-          console.log("serialize");
           done(undefined, user.id);
         });
 
         passport.deserializeUser((user, done) => {
-          console.log("DESserialize");
 
           done(null, user);
         });

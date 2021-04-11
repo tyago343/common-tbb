@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import { fetchEntries } from "../../utils";
-
 import { HomeWrapper } from "./styles";
 const Home = () => {
   const [entries, setEntries] = useState([]);
