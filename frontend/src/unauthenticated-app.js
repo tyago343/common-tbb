@@ -1,10 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {jsx} from '@emotion/react'
+import { jsx } from "@emotion/react";
 
 import { Button, FormGroup, Input } from "components/lib";
-import * as colors from 'styles/colors'
+import * as colors from "styles/colors";
 import React from "react";
+import { Logo } from "components/logo";
 
 function UnauthenticatedApp({ login }) {
   function handleSubmit(event) {
@@ -25,13 +26,14 @@ function UnauthenticatedApp({ login }) {
         width: "100%",
         height: "100vh",
         backgroundColor: colors.selago,
-        'label': {
+        label: {
           color: colors.royalPurple,
           marginBottom: "10px",
-          fontFamily: "roboto-bold"
+          fontFamily: "roboto-bold",
         },
       }}
     >
+      <Logo />
       <h3>TBB keys</h3>
       <form onSubmit={handleSubmit}>
         <FormGroup>
