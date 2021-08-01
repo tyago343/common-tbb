@@ -16,11 +16,11 @@ async function client(
   return window
     .fetch(`${apiURL}/${endpoint}`, config)
     .then(async (response) => {
-      const data = await response.json();
+      const data = await response;
       if (response.ok) {
-        return data;
+        return await data.json();
       } else {
-        return Promise.reject(data);
+        return data;
       }
     });
 }

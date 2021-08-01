@@ -20,15 +20,14 @@ export class Router {
   }
   public routes(): void {
     this.app
-      .route("/authenticate")
-      .post(passport.authenticate("local"), (req, res) => {
-        const authenticated = req.isAuthenticated();
-        if (authenticated) {
+      .route("/login")
+      .post(passport.authenticate('local'), (req, res) => {
+        if (req.user) {
           return res.send({
-            user: req.user,
-          });
+            user: req.user
+          })
         }
-        return res.redirect("/login");
+        return res.status(404).send({ message: "user not found" })
       });
     this.app
       .route("/users")

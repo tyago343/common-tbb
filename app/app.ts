@@ -7,9 +7,11 @@ import { Router } from "./routes/Router";
 import path from "path";
 import cookieParser from "cookie-parser";
 import { Strategy as LocalStrategy } from "passport-local";
-import bCrypt from "bcrypt";
+import bcrypt from "bcrypt";
+import cors from 'cors'
 import { User } from "./models/user.model";
-
+import { any } from "sequelize/types/lib/operators";
+import flash from 'connect-flash'
 // initialize configuration
 dotenv.config();
 
@@ -29,7 +31,7 @@ class App {
   private config(): void {
     this.app.use(compression());
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.urlencoded({ extended: false }));
     this.app.use(
       session({
         secret: "cat",
@@ -38,41 +40,45 @@ class App {
     this.app.use(cookieParser());
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+    this.app.use(cors())
+    this.app.use(flash())
   }
   private init(): void {
     passport.use(
       "local",
-      new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
+      new LocalStrategy({
+        passReqToCallback: true
+      }, (req, username, password, done) => {
         User.findOne({
           where: {
-            email: email,
+            username: username,
           },
         })
-          .then(function (user: any) {
+          .then((user: any) => {
             if (!user) {
-              return done(null, false, {
-                message: "Email does not exist",
-              });
+              return done(null, false, { message: 'Incorrect username.' });
             }
-
+            if (password !== user.password) {
+              return done(null, false, { message: 'Incorrect password.' })
+            }
             return done(null, user);
           })
-          .catch(function (err: any) {
-            console.log("Error:", err);
-            return done(null, false, {
-              message: "Something went wrong with your Signin",
-            });
-          });
-        passport.serializeUser<any, any>((user, done) => {
-          done(undefined, user.id);
-        });
-
-        passport.deserializeUser((user, done) => {
-
-          done(null, user);
-        });
+          .catch((err: any) => {
+            return done(err)
+          })
       })
     );
+    passport.serializeUser((user: any, done) => {
+      done(null, user.id);
+    });
+
+    passport.deserializeUser((id: string, done) => {
+      User.findByPk(id).then((user) => {
+        return done(null, user);
+      }).catch(err => {
+        return done(err, false)
+      });
+    });
     this.app.use(express.static(path.resolve("frontend/build/static/")));
     this.app.use(express.static(path.resolve("frontend/build/")));
 
@@ -82,3 +88,4 @@ class App {
   }
 }
 export default new App().app;
+
