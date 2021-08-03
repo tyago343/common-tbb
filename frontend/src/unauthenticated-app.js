@@ -4,10 +4,11 @@ import { jsx } from "@emotion/react";
 
 import { Button, FormGroup, Input } from "components/lib";
 import * as colors from "styles/colors";
-import React from "react";
 import { Logo } from "components/logo";
+import { useAuth } from "context/auth";
 
-function UnauthenticatedApp({ login }) {
+function UnauthenticatedApp() {
+  const { login } = useAuth();
   function handleSubmit(event) {
     event.preventDefault();
     const { username, password } = event.target.elements;
@@ -34,7 +35,14 @@ function UnauthenticatedApp({ login }) {
       }}
     >
       <Logo />
-      <h3>TBB keys</h3>
+      <h1
+        css={{
+          margin: "20px",
+          textTransform: "uppercase",
+        }}
+      >
+        TBB keys
+      </h1>
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <label htmlFor="username">Username:</label>

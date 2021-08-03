@@ -1,15 +1,10 @@
 import React from "react";
 import { UnauthenticatedApp } from "unauthenticated-app";
 import "./styles/global.css";
-import { client } from "utils/api";
-import { useAsync } from "utils/hooks";
+import { useAuth } from "context/auth";
+import { AuthenticatedApp } from "authenticated-app";
 function App() {
-  const { data, isError, isIdle, isLoading, isSuccess, run, setData } = useAsync();
-  function handleSubmit(formData) {
-    run(client("login", {data:formData}))
-  }
-  return (
-      <UnauthenticatedApp login={handleSubmit}/>
-  );
+  const { user } = useAuth();
+  return user ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 export { App };
