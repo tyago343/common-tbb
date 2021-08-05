@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { Entry } from "./entry.model";
 
 export interface ClientAttributes {
   id: number;
@@ -27,5 +28,4 @@ Client.init(
   },
   { sequelize }
 );
-
 Client.sync().then(() => console.log("link table created :D -----/"));

@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { Client } from "./client.model";
 
 export interface EntryAttributes {
   id: number;
@@ -49,4 +50,6 @@ Entry.init(
   },
   { sequelize }
 );
+Entry.belongsTo(Client);
+Client.hasMany(Entry);
 Entry.sync().then(() => console.log("Entry table created :D --------/"));
