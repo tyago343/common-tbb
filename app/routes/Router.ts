@@ -40,7 +40,7 @@ export class Router {
       .delete(this.authenticated, this.userController.delete);
     this.app
       .route("/entries")
-      .get(this.authenticated, this.entryController.index)
+      .get(this.entryController.index)
       .post(this.authenticated, this.entryController.save);
     this.app
       .route("/entries/:id")

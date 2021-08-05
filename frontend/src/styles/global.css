@@ -37,6 +37,9 @@
     padding: 0;
     letter-spacing: 1.5px;
 }
+body {
+  background-color: #F0F0FE;
+}
 h1, h2 {
   font-family: roboto-black;
 }

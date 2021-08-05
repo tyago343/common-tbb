@@ -33,4 +33,7 @@ const Button = styled.button({
   display: "block",
   margin: "auto",
 });
+const EntryRowStyles = {
+  
+}
 export { Input, FormGroup, Button };
