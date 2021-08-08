@@ -16,13 +16,17 @@ function AuthenticatedApp({}) {
     run(client("entries")).then((entries) => setData(entries));
   }, [run, setData]);
   const handleSubmit = (formData, itemId, method) => {
-    client(`entries/${itemId}`, { data: formData, method }).then((data) => {
-      run(client("entries")).then((entries) => setData(entries));
+    client(`entries/${itemId}`, { data: formData, method }).then(({ data }) => {
+      const result = entries.map((entry) => {
+        if (entry.id === data[0].id) return data[0];
+        return entry;
+      });
+      setData(result);
     });
   };
   const removeEntry = (itemId) => {
-    const result = entries.filter((entry) => entry.id !== itemId);
     client(`entries/${itemId}`, { method: "DELETE" }).then((data) => {
+      const result = entries.filter((entry) => entry.id !== itemId);
       setData(result);
     });
   };
@@ -58,7 +62,12 @@ function AuthenticatedApp({}) {
         <section>
           {entries &&
             entries.map((entry) => (
-              <ListItem item={entry} key={entry.id} onSubmit={handleSubmit} onDelete={removeEntry} />
+              <ListItem
+                item={entry}
+                key={entry.id}
+                onSubmit={handleSubmit}
+                onDelete={removeEntry}
+              />
             ))}
         </section>
       </main>

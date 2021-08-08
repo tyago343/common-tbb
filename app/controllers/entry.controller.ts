@@ -78,7 +78,6 @@ export class EntryController {
           .json({ error: "No pudo encontrarse o no se pudo actualizar" });
       }
       const data = result[1];
-      console.log(data)
       res.status(202).json({ data });
     } catch (err) {
       console.log(err);

@@ -28,6 +28,7 @@ function ListItem({ item, onSubmit, onDelete }) {
       item.id,
       "PUT"
     );
+    setTimeout(() => setShowModal(false), 1000);
   }
   return (
     <div
@@ -124,8 +125,10 @@ function ListItem({ item, onSubmit, onDelete }) {
             onClick={() => {
               if (
                 window.confirm("¿Estás seguro de querer eliminar esta entrada?")
-              )
+              ) {
                 onDelete(item.id);
+                setTimeout(() => setShowModal(false), 1000);
+              }
             }}
           >
             Eliminar
