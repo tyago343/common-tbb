@@ -69,6 +69,7 @@ export class EntryController {
       const update: UpdateOptions = {
         where: { id: entryId },
         limit: 1,
+        returning: true
       };
       const result = await Entry.update(params, update);
       if (!result) {
@@ -76,7 +77,9 @@ export class EntryController {
           .status(400)
           .json({ error: "No pudo encontrarse o no se pudo actualizar" });
       }
-      res.status(202).json({ result });
+      const data = result[1];
+      console.log(data)
+      res.status(202).json({ data });
     } catch (err) {
       console.log(err);
       res

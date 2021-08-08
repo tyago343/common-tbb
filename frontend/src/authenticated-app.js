@@ -20,6 +20,12 @@ function AuthenticatedApp({}) {
       run(client("entries")).then((entries) => setData(entries));
     });
   };
+  const removeEntry = (itemId) => {
+    const result = entries.filter((entry) => entry.id !== itemId);
+    client(`entries/${itemId}`, { method: "DELETE" }).then((data) => {
+      setData(result);
+    });
+  };
   return (
     <section>
       <header
@@ -31,7 +37,7 @@ function AuthenticatedApp({}) {
         }}
       >
         <Logo width={60} height={60} />
-        <p css={{}} onClick={logout}>
+        <p css={{ cursor: "pointer" }} onClick={logout}>
           Logout
         </p>
       </header>
@@ -52,7 +58,7 @@ function AuthenticatedApp({}) {
         <section>
           {entries &&
             entries.map((entry) => (
-              <ListItem item={entry} key={entry.id} onSubmit={handleSubmit} />
+              <ListItem item={entry} key={entry.id} onSubmit={handleSubmit} onDelete={removeEntry} />
             ))}
         </section>
       </main>

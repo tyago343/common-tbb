@@ -9,7 +9,7 @@ import { Button, FormGroup, Input } from "components/lib";
 import lock from "styles/lock-icon.svg";
 import * as colors from "styles/colors";
 
-function ListItem({ item, onSubmit }) {
+function ListItem({ item, onSubmit, onDelete }) {
   const [showModal, setShowModal] = useState(false);
   const [edit, setEdit] = useState(false);
   const open = () => setShowModal(true);
@@ -17,13 +17,17 @@ function ListItem({ item, onSubmit }) {
   function handleSubmit(event) {
     event.preventDefault();
     const { application, url, login, password, notes } = event.target.elements;
-    onSubmit({
-      application: application.value,
-      url: url.value,
-      login: login.value,
-      password: password.value,
-      notes: notes.value,
-    }, item.id, "PUT");
+    onSubmit(
+      {
+        application: application.value,
+        url: url.value,
+        login: login.value,
+        password: password.value,
+        notes: notes.value,
+      },
+      item.id,
+      "PUT"
+    );
   }
   return (
     <div
@@ -116,7 +120,16 @@ function ListItem({ item, onSubmit }) {
           }}
         >
           {!edit && <Button onClick={() => setEdit(true)}>Editar</Button>}
-          <Button>Eliminar</Button>
+          <Button
+            onClick={() => {
+              if (
+                window.confirm("¿Estás seguro de querer eliminar esta entrada?")
+              )
+                onDelete(item.id);
+            }}
+          >
+            Eliminar
+          </Button>
         </div>
       </Dialog>
     </div>
