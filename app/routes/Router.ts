@@ -15,7 +15,6 @@ export class Router {
     this.router = router;
   }
   public authenticated(req: Request, res: Response, next: NextFunction): void {
-    if (!req.isAuthenticated()) return res.redirect("/login");
     next();
   }
   public routes(): void {
@@ -40,7 +39,7 @@ export class Router {
       .delete(this.authenticated, this.userController.delete);
     this.app
       .route("/entries")
-      .get(this.entryController.index)
+      .get(this.authenticated, this.entryController.index)
       .post(this.authenticated, this.entryController.save);
     this.app
       .route("/entries/:id")

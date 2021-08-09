@@ -6,8 +6,9 @@ async function client(
   const config = {
     method: data ? "POST" : "GET",
     body: data ? JSON.stringify(data) : undefined,
+    withCredentials: true,
+    credentials: 'include',
     headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
       "Content-type": data ? "application/json" : undefined,
       ...customHeaders,
     },
@@ -16,6 +17,7 @@ async function client(
   return window
     .fetch(`${apiURL}/${endpoint}`, config)
     .then(async (response) => {
+      console.log(response)
       if(response.status === 401){
         return;
       }
