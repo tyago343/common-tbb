@@ -25,23 +25,27 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    username: {
-      type: new DataTypes.STRING(128),
-      allowNull: false,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     admin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
   },
   {
     sequelize,

@@ -3,6 +3,7 @@ import { UserController } from "../controllers/user.controller";
 import { EntryController } from "../controllers/entry.controller";
 import { ClientController } from "../controllers/client.controller";
 import passport from "passport";
+import path from "path";
 
 export class Router {
   public userController: UserController = new UserController();
@@ -20,15 +21,14 @@ export class Router {
   }
   public routes(): void {
     this.app
-      .route("/login")
-      .post(passport.authenticate('local'), (req, res) => {
-        if (req.user) {
-          return res.send({
-            user: req.user
-          })
+      .route("/auth/google")
+      .get(passport.authenticate('google', { scope: ['email', 'profile'] }));
+    this.app
+      .route("/auth/google/cb").get(passport.authenticate("google"), (req,res, next) => {
+        if(req.user){
+          res.send(req.user);
         }
-        return res.status(404).send({ message: "user not found" })
-      });
+      })
     this.app
       .route("/users")
       .get(this.authenticated, this.userController.index)

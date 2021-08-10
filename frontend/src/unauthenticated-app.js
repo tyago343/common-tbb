@@ -17,6 +17,7 @@ function UnauthenticatedApp() {
       password: password.value,
     });
   }
+  const onClick = () => window.fetch("http://localhost:8000/auth/google")
   return (
     <div
       css={{
@@ -53,6 +54,7 @@ function UnauthenticatedApp() {
         </FormGroup>
         <Button type="submit">Login</Button>
       </form>
+      <a href="http://localhost:8080/auth/google">Sign In with Google</a>
     </div>
   );
 }
