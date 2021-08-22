@@ -1,17 +1,14 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import compression from "compression";
 import session from "express-session";
-import passport from "passport";
 import dotenv from "dotenv";
 import { Router } from "./routes/Router";
 import path from "path";
 import cookieParser from "cookie-parser";
-import { Strategy as LocalStrategy } from "passport-local";
-import bcrypt from "bcrypt";
 import cors from 'cors'
+import passport from 'passport';
+import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth'
 import { User } from "./models/user.model";
-import { any } from "sequelize/types/lib/operators";
-import flash from 'connect-flash'
 // initialize configuration
 dotenv.config();
 
@@ -37,53 +34,45 @@ class App {
         secret: "cat",
       })
     );
+    this.app.use(passport.initialize())
+    this.app.use(passport.session())
     this.app.use(cookieParser());
-    this.app.use(passport.initialize());
-    this.app.use(passport.session());
-    this.app.use(cors())
-    this.app.use(flash())
+    this.app.use(cors({ origin: "http://localhost:8080" }))
   }
   private init(): void {
-    passport.use(
-      "local",
-      new LocalStrategy({
-        passReqToCallback: true
-      }, (req, username, password, done) => {
-        User.findOne({
-          where: {
-            username: username,
-          },
-        })
-          .then((user: any) => {
-            if (!user) {
-              return done(null, false, { message: 'Incorrect username.' });
-            }
-            if (password !== user.password) {
-              return done(null, false, { message: 'Incorrect password.' })
-            }
-            return done(null, user);
-          })
-          .catch((err: any) => {
-            return done(err)
-          })
-      })
-    );
-    passport.serializeUser((user: any, done) => {
-      done(null, user.id);
-    });
 
-    passport.deserializeUser((id: string, done) => {
-      User.findByPk(id).then((user) => {
-        return done(null, user);
-      }).catch(err => {
-        return done(err, false)
-      });
-    });
     this.app.use(express.static(path.resolve("frontend/build/static/")));
     this.app.use(express.static(path.resolve("frontend/build/")));
 
-    this.app.get("*", (req: express.Request, res: express.Response) => {
-      res.sendFile(path.resolve("frontend/build/index.html"));
+  
+    passport.use(new GoogleStrategy({
+      clientID: "819237612844-llael83kjl4banjcaoudjc3vadfokgcd.apps.googleusercontent.com",
+      clientSecret: "3cg6nfNvF7L9WOJhg_u7XY1r",
+      callbackURL: "http://localhost:8080/auth/google/cb",
+      proxy: true
+    },
+      function (accessToken, refreshToken, profile, done) {
+        User.findOrCreate({ where: { googleId: profile.id }, defaults: { email: profile.emails[0].value, name: profile.displayName } })
+          .then(user => done(null, user))
+          .catch(err => done(err, false))
+      }))
+    passport.serializeUser((user: any, done) => {
+      done(null, user);
+    });
+    passport.deserializeUser((user: any, done) => {
+      User.findByPk(user.id).then(user => {
+        done(null, user);
+      });
+    });
+    this.app.get("*", (req: express.Request, res: express.Response, next: NextFunction) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+      );
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      res.sendFile('index.html', {root: path.join(__dirname, '..', 'dist')});
+      res.end();
     });
   }
 }

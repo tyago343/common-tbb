@@ -17,7 +17,6 @@ function UnauthenticatedApp() {
       password: password.value,
     });
   }
-  const onClick = () => window.fetch("http://localhost:8000/auth/google")
   return (
     <div
       css={{

@@ -3,7 +3,6 @@ import { UserController } from "../controllers/user.controller";
 import { EntryController } from "../controllers/entry.controller";
 import { ClientController } from "../controllers/client.controller";
 import passport from "passport";
-import path from "path";
 
 export class Router {
   public userController: UserController = new UserController();
@@ -26,7 +25,7 @@ export class Router {
     this.app
       .route("/auth/google/cb").get(passport.authenticate("google"), (req,res, next) => {
         if(req.user){
-          res.send(req.user);
+          res.redirect('/');
         }
       })
     this.app
@@ -40,7 +39,7 @@ export class Router {
       .delete(this.authenticated, this.userController.delete);
     this.app
       .route("/entries")
-      .get(this.entryController.index)
+      .get(this.authenticated, this.entryController.index)
       .post(this.authenticated, this.entryController.save);
     this.app
       .route("/entries/:id")
